@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 class AppProvider extends ChangeNotifier {
 
-  Future<void> addCategory(String value){
+  Future<void> addCategory(String value) async{
     final category = CategoryModels(value);
   }
 
