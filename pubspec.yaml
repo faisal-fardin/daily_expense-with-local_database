@@ -39,6 +39,8 @@ dependencies:
   intl:
   google_fonts:
   sqflite:
+  get:
+
 
 
 dev_dependencies:
