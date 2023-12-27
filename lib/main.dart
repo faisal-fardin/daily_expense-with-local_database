@@ -1,11 +1,17 @@
+import 'dart:js';
+
 import 'package:daily_expense/pages/add_expense_page.dart';
 import 'package:daily_expense/pages/category_page.dart';
 import 'package:daily_expense/pages/home_page.dart';
+import 'package:daily_expense/provider/app_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => AppProvider(),
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
