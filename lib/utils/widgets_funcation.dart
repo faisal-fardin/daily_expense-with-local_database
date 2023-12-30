@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+showMsg(BuildContext context, String msg) =>
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)),);
+
 
 showSingleTextFieldDialog({
   required BuildContext context,
@@ -11,9 +16,10 @@ showSingleTextFieldDialog({
 }) {
   final controller = TextEditingController();
   showDialog(
-    barrierDismissible: false,
+      barrierDismissible: false,
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (context) =>
+          AlertDialog(
             title: Text(title),
             content: Padding(
               padding: const EdgeInsets.all(8),
@@ -25,14 +31,14 @@ showSingleTextFieldDialog({
             ),
             actions: [
               TextButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pop(context);
                 },
                 child: Text(negativeBtnText),
               ),
               ElevatedButton(
-                onPressed: (){
-                  if(controller.text.isEmpty){
+                onPressed: () {
+                  if (controller.text.isEmpty) {
                     return;
                   }
                   Navigator.pop(context);

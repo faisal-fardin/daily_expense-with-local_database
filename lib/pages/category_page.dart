@@ -1,5 +1,7 @@
+import 'package:daily_expense/provider/app_provider.dart';
 import 'package:daily_expense/utils/widgets_funcation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddCategoryPage extends StatefulWidget {
   static const String routeName = '/category';
@@ -9,6 +11,7 @@ class AddCategoryPage extends StatefulWidget {
   @override
   State<AddCategoryPage> createState() => _AddCategoryPageState();
 }
+
 
 class _AddCategoryPageState extends State<AddCategoryPage> {
   @override
@@ -24,7 +27,13 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             title: 'Add Category',
             hint: 'Enter Category Name',
             onSave: (value){
-
+              Provider.of<AppProvider>(context,listen: false )
+                  .addCategory(value)
+                  .then((id) {
+                    showMsg(context, 'Category Added');
+              }).catchError((error){
+                showMsg(context, 'Could not Save');
+              });
             },
           );
         },

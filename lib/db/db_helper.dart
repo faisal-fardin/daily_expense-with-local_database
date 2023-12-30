@@ -1,13 +1,24 @@
 import 'package:daily_expense/models/category_models.dart';
+import 'package:daily_expense/models/expense_models.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 
 class DbHelper{
 
-  final String crateTableCategory = '''carte table $tblCategory(
-  
+  final String crateTableCategory = '''create table $tblCategory(
   $tblCategoryColID integer primary key autoincrement,
   $tblCategoryColName text)''';
+
+  final String createTableExpense = '''create table $tblExpense(
+    $tblExpenseColId integer primary key autoincrement,
+    $tblExpenseColName text,
+    $tblExpenseColCategory text,
+    $tblExpenseColAmount integer,
+    $tblExpenseColFormattedDate text,
+    $tblExpenseColTimeStamp integer,
+    $tblExpenseColDay integer,
+    $tblExpenseColMonth integer,
+    $tblExpenseColYear integer)''';
 
 
   Future<Database> _open() async{
@@ -15,7 +26,14 @@ class DbHelper{
     final dbPath = path.join(root,'expense.db');
     return openDatabase(dbPath, version: 1, onCreate: (db,version) async {
        await db.execute(crateTableCategory);
+       await db.execute(createTableExpense);
     },);
   }
+
+  Future<int> insertCategory(CategoryModels models) async{
+    final db = await _open();
+    return db.insert(tblCategory, models.toMap());
+  }
+
 
 }
