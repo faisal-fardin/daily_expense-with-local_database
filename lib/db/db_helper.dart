@@ -36,4 +36,11 @@ class DbHelper{
   }
 
 
+  Future<List<CategoryModels>> getAllCategories() async{
+    final db = await _open();
+    final List<Map<String,dynamic>> mapList = await db.query(tblCategory);
+    return List.generate(mapList.length, (index) => CategoryModels.fromMap(mapList[index]));
+  }
+
+
 }

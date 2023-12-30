@@ -9,16 +9,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const MainDrawer(),
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Get.toNamed('/addExpense');
-        },
-        child: const Icon(Icons.add),
+    return SafeArea(
+      child: Scaffold(
+        drawer: const MainDrawer(),
+        appBar: AppBar(
+          title: const Text('Category'),
+          backgroundColor: Colors.black26,
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            Get.toNamed('/addExpense');
+          },
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

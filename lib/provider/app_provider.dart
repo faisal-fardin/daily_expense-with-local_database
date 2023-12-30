@@ -5,10 +5,20 @@ import 'package:flutter/foundation.dart';
 
 class AppProvider extends ChangeNotifier {
 
+  List<CategoryModels> categoryList =[];
+
   final db = DbHelper();
   Future<int> addCategory(String value) async{
     final category = CategoryModels(value);
-    return db.insertCategory(category);
+    final id = await db.insertCategory(category);
+    await getAllCategories();
+    return id;
   }
+
+  Future<void>getAllCategories() async{
+    categoryList = await db.getAllCategories();
+    notifyListeners();
+  }
+
 
 }
