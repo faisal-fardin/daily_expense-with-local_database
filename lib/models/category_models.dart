@@ -1,12 +1,25 @@
-
 const String tblCategory = 'tbl_category';
 const String tblCategoryColID = 'id';
 const String tblCategoryColName = 'name';
 
+class CategoryModels {
+  int? id;
+  String name;
 
-class CategoryModels{
-   int? id;
-   String name;
+  CategoryModels(this.name, {this.id});
 
-   CategoryModels(this.name);
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{
+      tblCategoryColName: name,
+    };
+    if (id != null) {
+      map[tblCategoryColID] = id;
+    }
+    return map;
+  }
+
+  factory CategoryModels.fromMap(Map<String, dynamic> map) => CategoryModels(
+        map[tblCategoryColName],
+        id: map[tblCategoryColID],
+      );
 }
