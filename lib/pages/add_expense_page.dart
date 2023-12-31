@@ -22,10 +22,18 @@ class _AddExpensePageState extends State<AddExpensePage> {
   final _amountController = TextEditingController();
   CategoryModels? categoryModels;
   DateTime selectedDate = DateTime.now();
+  ExpenseModels? expenseModel;
+
 
   @override
   void didChangeDependencies() {
     Provider.of<AppProvider>(context, listen: false).getAllCategories();
+    final arg = ModalRoute.of(context)?.settings.arguments;
+    if(arg != null){
+      expenseModel = arg as ExpenseModels;
+      _nameController.text =  expenseModel!.name;
+      _amountController.text =  expenseModel!.amount.toString();
+    }
     super.didChangeDependencies();
   }
 
