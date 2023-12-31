@@ -35,6 +35,10 @@ class DbHelper{
     return db.insert(tblCategory, models.toMap());
   }
 
+  Future<int> insertExpense(ExpenseModels expense) async{
+    final db = await _open();
+    return db.insert(tblExpense, expense.toMap());
+  }
 
   Future<List<CategoryModels>> getAllCategories() async{
     final db = await _open();
@@ -48,11 +52,11 @@ class DbHelper{
     return List.generate(mapList.length, (index) => ExpenseModels.fromMap(mapList[index]));
   }
 
-  Future<int> insertExpense(ExpenseModels expense) async{
+  Future<int> deleteExpenseById(int id) async{
     final db = await _open();
-    return db.insert(tblExpense, expense.toMap());
-
+    return db.delete(tblExpense, where: '$tblExpenseColId = ? ', whereArgs: [id]);
   }
+
 
 
 }

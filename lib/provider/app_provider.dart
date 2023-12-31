@@ -37,6 +37,11 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<int> deleteExpense(int id) async{
+    final deleteRowId = await db.deleteExpenseById(id);
+    await getAllExpenses();
+    return deleteRowId;
+  }
 
 
 }
