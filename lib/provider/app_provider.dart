@@ -25,6 +25,12 @@ class AppProvider extends ChangeNotifier {
     return id;
   }
 
+  Future<int> updateExpense(ExpenseModels expense) async{
+    final id = await db.updateExpense(expense);
+    await getAllExpenses();
+    return id;
+  }
+
 
 
   Future<void>getAllCategories() async{
@@ -37,11 +43,19 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<CategoryModels> getCategoryByName(String name) async {
+    return db.getCategoryByName(name);
+  }
+
+
   Future<int> deleteExpense(int id) async{
     final deleteRowId = await db.deleteExpenseById(id);
     await getAllExpenses();
     return deleteRowId;
   }
+
+
+
 
 
 }

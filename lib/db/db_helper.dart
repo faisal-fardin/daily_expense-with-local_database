@@ -32,13 +32,21 @@ class DbHelper{
 
   Future<int> insertCategory(CategoryModels models) async{
     final db = await _open();
-    return db.insert(tblCategory, models.toMap());
+    return db.insert(tblCategory, models.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> insertExpense(ExpenseModels expense) async{
     final db = await _open();
     return db.insert(tblExpense, expense.toMap());
   }
+
+
+  Future<int> updateExpense(ExpenseModels expense) async{
+    final db = await _open();
+    return db.update(tblExpense, expense.toMap(),where: '$tblExpenseColId = ?' ,whereArgs: [expense.id]);
+  }
+
+
 
   Future<List<CategoryModels>> getAllCategories() async{
     final db = await _open();
@@ -50,6 +58,13 @@ class DbHelper{
     final db = await _open();
     final List<Map<String,dynamic>> mapList = await db.query(tblExpense);
     return List.generate(mapList.length, (index) => ExpenseModels.fromMap(mapList[index]));
+  }
+
+
+  Future<CategoryModels> getCategoryByName(String name) async{
+    final db = await _open();
+    final mapList = await db.query(tblCategory,where: '$tblCategoryColName = ? ', whereArgs: [name]);
+    return CategoryModels.fromMap(mapList.first);
   }
 
   Future<int> deleteExpenseById(int id) async{

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:daily_expense/models/category_models.dart';
 import 'package:daily_expense/models/expense_models.dart';
 import 'package:daily_expense/provider/app_provider.dart';
@@ -24,15 +26,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
   DateTime selectedDate = DateTime.now();
   ExpenseModels? expenseModel;
 
-
   @override
   void didChangeDependencies() {
     Provider.of<AppProvider>(context, listen: false).getAllCategories();
     final arg = ModalRoute.of(context)?.settings.arguments;
-    if(arg != null){
+    if (arg != null) {
       expenseModel = arg as ExpenseModels;
-      _nameController.text =  expenseModel!.name;
-      _amountController.text =  expenseModel!.amount.toString();
+      _nameController.text = expenseModel!.name;
+      _amountController.text = expenseModel!.amount.toString();
+      selectedDate = DateTime.fromMillisecondsSinceEpoch(expenseModel!.timeStamp);
+      _getCategory(expenseModel!.name);
     }
     super.didChangeDependencies();
   }
@@ -41,7 +44,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Expense'),
+        title:  Text( expenseModel == null ? 'Add New Expense' : 'Update Expense'),
       ),
       body: Form(
         key: _formKey,
@@ -154,12 +157,20 @@ class _AddExpensePageState extends State<AddExpensePage> {
                   Text(getFormattedDate(selectedDate)),
                 ],
               ),
-              Padding(
+              if(expenseModel == null )Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
                 child: ElevatedButton(
                   onPressed: saveExpense,
                   child: const Text('SAVE'),
+                ),
+              ),
+              if(expenseModel != null) Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
+                child: ElevatedButton(
+                  onPressed: _updateExpense,
+                  child: const Text('UPDATE'),
                 ),
               ),
             ],
@@ -209,6 +220,35 @@ class _AddExpensePageState extends State<AddExpensePage> {
         Navigator.pop(context);
       }).catchError((error) {
         showMsg(context, 'Failed to Save');
+      });
+    }
+  }
+
+  void _getCategory(String name) async {
+    categoryModels = await Provider.of<AppProvider>(context, listen: false)
+        .getCategoryByName(expenseModel!.categoryName);
+    setState(() {});
+  }
+
+  void _updateExpense() async{
+    if (_formKey.currentState!.validate()){
+
+      expenseModel!.name = _nameController.text.trim();
+      expenseModel!.categoryName = categoryModels!.name;
+      expenseModel!.amount = num.parse(_amountController.text.trim());
+      expenseModel!.formattedDate = getFormattedDate(selectedDate);
+      expenseModel!.timeStamp = selectedDate.millisecondsSinceEpoch;
+      expenseModel!.day = selectedDate.day;
+      expenseModel!.month = selectedDate.month;
+      expenseModel!.year = selectedDate.year;
+
+      Provider.of<AppProvider>(context, listen: false)
+          .updateExpense(expenseModel!)
+          .then((value) {
+        showMsg(context, 'Updated');
+        Navigator.pop(context);
+      }).catchError((error) {
+        showMsg(context, 'Failed to Updated');
       });
     }
   }
