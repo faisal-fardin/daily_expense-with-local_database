@@ -42,5 +42,17 @@ class DbHelper{
     return List.generate(mapList.length, (index) => CategoryModels.fromMap(mapList[index]));
   }
 
+  Future<List<ExpenseModels>> getAllExpenses() async{
+    final db = await _open();
+    final List<Map<String,dynamic>> mapList = await db.query(tblExpense);
+    return List.generate(mapList.length, (index) => ExpenseModels.fromMap(mapList[index]));
+  }
+
+  Future<int> insertExpense(ExpenseModels expense) async{
+    final db = await _open();
+    return db.insert(tblExpense, expense.toMap());
+
+  }
+
 
 }
