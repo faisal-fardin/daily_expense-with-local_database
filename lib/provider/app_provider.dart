@@ -43,6 +43,12 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void>getAllExpensesByCategoryName(String name) async{
+    expenseList = await db.getAllExpensesByCategoryName(name);
+    notifyListeners();
+  }
+
+
   Future<CategoryModels> getCategoryByName(String name) async {
     return db.getCategoryByName(name);
   }

@@ -34,7 +34,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
       expenseModel = arg as ExpenseModels;
       _nameController.text = expenseModel!.name;
       _amountController.text = expenseModel!.amount.toString();
-      selectedDate = DateTime.fromMillisecondsSinceEpoch(expenseModel!.timeStamp);
+      selectedDate =
+          DateTime.fromMillisecondsSinceEpoch(expenseModel!.timeStamp);
       _getCategory(expenseModel!.name);
     }
     super.didChangeDependencies();
@@ -44,7 +45,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text( expenseModel == null ? 'Add New Expense' : 'Update Expense'),
+        title:
+            Text(expenseModel == null ? 'Add New Expense' : 'Update Expense'),
       ),
       body: Form(
         key: _formKey,
@@ -110,20 +112,33 @@ class _AddExpensePageState extends State<AddExpensePage> {
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 10.0, vertical: 20),
+                        horizontal: 15.0, vertical: 20),
                     child: Consumer<AppProvider>(
                       builder: (context, provider, child) =>
                           DropdownButtonFormField<CategoryModels>(
+                        decoration:
+                            const InputDecoration.collapsed(hintText: ''),
                         value: categoryModels,
-                        hint: const Text('Select Category'),
+                        hint: const Text(
+                          'Select Category',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold),
+                        ),
                         isExpanded: true,
                         items: provider.categoryList
                             .map(
                               (e) => DropdownMenuItem<CategoryModels>(
+                                enabled: e.name == "All" ? false : true,
                                 value: e,
                                 child: Text(
                                   e.name,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                      color: e.name == "All"
+                                          ? Colors.grey
+                                          : Colors.black,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -146,33 +161,71 @@ class _AddExpensePageState extends State<AddExpensePage> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 30,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple),
                     onPressed: _showDatePicker,
-                    icon: const Icon(Icons.calendar_month_sharp),
-                    label: const Text('Select Date'),
+                    icon: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.calendar_month_sharp,
+                        color: Colors.white,
+                      ),
+                    ),
+                    label: const Text(
+                      'Select Date',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  Text(getFormattedDate(selectedDate)),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple),
+                    onPressed: (){},
+                    child: Text(getFormattedDate(selectedDate),style:const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),),
+                  ),
                 ],
               ),
-              if(expenseModel == null )Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
-                child: ElevatedButton(
-                  onPressed: saveExpense,
-                  child: const Text('SAVE'),
-                ),
+              const SizedBox(
+                height: 40,
               ),
-              if(expenseModel != null) Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10),
-                child: ElevatedButton(
-                  onPressed: _updateExpense,
-                  child: const Text('UPDATE'),
+              if (expenseModel == null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 40.0, vertical: 10),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple),
+                    onPressed: saveExpense,
+                    child: const Text(
+                      'SAVE',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-              ),
+              if (expenseModel != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 40.0, vertical: 10),
+                  child: ElevatedButton(
+                    onPressed: _updateExpense,
+                    child: const Text('UPDATE'),
+                  ),
+                ),
             ],
           ),
         ),
@@ -230,9 +283,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
     setState(() {});
   }
 
-  void _updateExpense() async{
-    if (_formKey.currentState!.validate()){
-
+  void _updateExpense() async {
+    if (_formKey.currentState!.validate()) {
       expenseModel!.name = _nameController.text.trim();
       expenseModel!.categoryName = categoryModels!.name;
       expenseModel!.amount = num.parse(_amountController.text.trim());

@@ -50,7 +50,7 @@ class DbHelper{
 
   Future<List<CategoryModels>> getAllCategories() async{
     final db = await _open();
-    final List<Map<String,dynamic>> mapList = await db.query(tblCategory);
+    final List<Map<String,dynamic>> mapList = await db.query(tblCategory,orderBy: tblCategoryColName);
     return List.generate(mapList.length, (index) => CategoryModels.fromMap(mapList[index]));
   }
 
@@ -60,6 +60,11 @@ class DbHelper{
     return List.generate(mapList.length, (index) => ExpenseModels.fromMap(mapList[index]));
   }
 
+  Future<List<ExpenseModels>> getAllExpensesByCategoryName(String name) async{
+    final db = await _open();
+    final List<Map<String,dynamic>> mapList = await db.query(tblExpense,where: '$tblExpenseColCategory = ? ', whereArgs: [name]);
+    return List.generate(mapList.length, (index) => ExpenseModels.fromMap(mapList[index]));
+  }
 
   Future<CategoryModels> getCategoryByName(String name) async{
     final db = await _open();
